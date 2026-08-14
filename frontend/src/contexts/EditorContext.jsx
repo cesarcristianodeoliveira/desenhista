@@ -2,8 +2,11 @@ import {
   createContext,
   useContext,
   useMemo,
-  useRef
+  useRef,
+  useState
 } from 'react'
+
+import { TOOLS } from '../constants/tools'
 
 import {
   addText as addTextToCanvas
@@ -13,6 +16,19 @@ const EditorContext = createContext(null)
 
 export function EditorProvider({ children }) {
   const canvasRef = useRef(null)
+
+  const [
+    activeTool,
+    setActiveTool
+  ] = useState(TOOLS.SELECT)
+
+  const setTool = (tool) => {
+    if (!Object.values(TOOLS).includes(tool)) {
+      return
+    }
+
+    setActiveTool(tool)
+  }
 
   const addText = () => {
     const canvas = canvasRef.current
@@ -27,9 +43,13 @@ export function EditorProvider({ children }) {
   const value = useMemo(() => {
     return {
       canvasRef,
+      activeTool,
+      setTool,
       addText
     }
-  }, [])
+  }, [
+    activeTool
+  ])
 
   return (
     <EditorContext.Provider value={value}>
