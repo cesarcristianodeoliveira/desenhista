@@ -8,10 +8,10 @@ import PageContainer from '../PageContainer'
 
 const WORKSPACE_PADDING = 64
 
-function Workspace() {
+function Workspace({ page }) {
   const workspaceRef = useRef(null)
 
-  const [pageSize, setPageSize] = useState(600)
+  const [zoom, setZoom] = useState(1)
 
   useEffect(() => {
     const workspace = workspaceRef.current
@@ -20,41 +20,54 @@ function Workspace() {
       return undefined
     }
 
-    const updatePageSize = () => {
+    const updateZoom = () => {
       const {
         width,
         height
       } = workspace.getBoundingClientRect()
 
-      const availableWidth = width - WORKSPACE_PADDING
-      const availableHeight = height - WORKSPACE_PADDING
+      const availableWidth =
+        width - WORKSPACE_PADDING
 
-      const nextPageSize = Math.min(
-        availableWidth,
-        availableHeight,
-        600
+      const availableHeight =
+        height - WORKSPACE_PADDING
+
+      const scaleX =
+        availableWidth / page.width
+
+      const scaleY =
+        availableHeight / page.height
+
+      const nextZoom = Math.min(
+        scaleX,
+        scaleY,
+        1
       )
 
-      setPageSize(nextPageSize)
+      setZoom(nextZoom)
     }
 
-    const resizeObserver = new ResizeObserver(updatePageSize)
+    const resizeObserver =
+      new ResizeObserver(updateZoom)
 
     resizeObserver.observe(workspace)
 
-    updatePageSize()
+    updateZoom()
 
     return () => {
       resizeObserver.disconnect()
     }
-  }, [])
+  }, [page])
 
   return (
     <section
       ref={workspaceRef}
       className="workspace"
     >
-      <PageContainer size={pageSize} />
+      <PageContainer
+        page={page}
+        zoom={zoom}
+      />
     </section>
   )
 }

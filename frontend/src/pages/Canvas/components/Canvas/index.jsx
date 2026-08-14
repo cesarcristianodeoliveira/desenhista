@@ -7,7 +7,7 @@ import {
   createCanvas
 } from '../../../../lib/canvas/createCanvas'
 
-function Canvas({ size }) {
+function Canvas({ page, zoom }) {
   const canvasElementRef = useRef(null)
   const fabricCanvasRef = useRef(null)
 
@@ -29,17 +29,21 @@ function Canvas({ size }) {
   }, [])
 
   useEffect(() => {
-    if (!fabricCanvasRef.current) {
+    const canvas = fabricCanvasRef.current
+
+    if (!canvas) {
       return
     }
 
-    fabricCanvasRef.current.setDimensions({
-      width: size,
-      height: size
+    canvas.setDimensions({
+      width: page.width,
+      height: page.height
     })
 
-    fabricCanvasRef.current.requestRenderAll()
-  }, [size])
+    canvas.setZoom(zoom)
+
+    canvas.requestRenderAll()
+  }, [page, zoom])
 
   return (
     <canvas ref={canvasElementRef} />

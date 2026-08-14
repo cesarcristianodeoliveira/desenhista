@@ -2,9 +2,3 @@
   background: #ffffff;
   position: relative;
 }
-
-.page-container canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
