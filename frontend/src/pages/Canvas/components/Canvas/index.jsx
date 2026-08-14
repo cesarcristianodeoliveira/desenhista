@@ -4,12 +4,19 @@ import {
 } from 'react'
 
 import {
+  useEditor
+} from '../../../../contexts/EditorContext'
+
+import {
   createCanvas
 } from '../../../../lib/canvas'
 
 function Canvas({ page, zoom }) {
   const canvasElementRef = useRef(null)
-  const fabricCanvasRef = useRef(null)
+
+  const {
+    canvasRef
+  } = useEditor()
 
   useEffect(() => {
     if (!canvasElementRef.current) {
@@ -20,16 +27,16 @@ function Canvas({ page, zoom }) {
       canvasElementRef.current
     )
 
-    fabricCanvasRef.current = canvas
+    canvasRef.current = canvas
 
     return () => {
       canvas.dispose()
-      fabricCanvasRef.current = null
+      canvasRef.current = null
     }
-  }, [])
+  }, [canvasRef])
 
   useEffect(() => {
-    const canvas = fabricCanvasRef.current
+    const canvas = canvasRef.current
 
     if (!canvas) {
       return
@@ -43,12 +50,10 @@ function Canvas({ page, zoom }) {
     canvas.setZoom(zoom)
 
     canvas.requestRenderAll()
-  }, [page, zoom])
+  }, [canvasRef, page, zoom])
 
   return (
-    <div>
-      <canvas ref={canvasElementRef} />
-    </div>
+    <canvas ref={canvasElementRef} />
   )
 }
 

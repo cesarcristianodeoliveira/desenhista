@@ -1,7 +1,13 @@
-function Toolbar({ onAddText }) {
+import { useEditor } from '../../../../contexts/EditorContext'
+
+function Toolbar() {
+  const {
+    addText
+  } = useEditor()
+
   return (
     <div>
-      <button onClick={onAddText}>
+      <button onClick={addText}>
         Adicionar texto
       </button>
     </div>
