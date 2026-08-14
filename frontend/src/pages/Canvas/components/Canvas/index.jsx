@@ -5,7 +5,7 @@ import {
 
 import {
   createCanvas
-} from '../../../../lib/canvas/createCanvas'
+} from '../../../../lib/canvas'
 
 function Canvas({ page, zoom }) {
   const canvasElementRef = useRef(null)
@@ -46,7 +46,9 @@ function Canvas({ page, zoom }) {
   }, [page, zoom])
 
   return (
-    <canvas ref={canvasElementRef} />
+    <div>
+      <canvas ref={canvasElementRef} />
+    </div>
   )
 }
 
