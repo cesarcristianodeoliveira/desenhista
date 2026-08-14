@@ -1,5 +1,7 @@
 import './index.css'
 
+import Canvas from '../Canvas'
+
 function PageContainer({ size }) {
   return (
     <div
@@ -9,7 +11,7 @@ function PageContainer({ size }) {
         height: size
       }}
     >
-      Page
+      <Canvas size={size} />
     </div>
   )
 }
