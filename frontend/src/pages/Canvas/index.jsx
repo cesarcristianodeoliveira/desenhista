@@ -1,11 +1,14 @@
+import Workspace from './components/Workspace'
+import './index.css'
+
 function Canvas() {
   return (
-    <main>
-      <h1>Canvas</h1>
+    <main className="canvas-page">
+      <header className="canvas-header">
+        <h1>Canvas</h1>
+      </header>
 
-      <p>
-        Seu espaço para criar comunicação visual.
-      </p>
+      <Workspace />
     </main>
   )
 }
