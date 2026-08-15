@@ -1,5 +1,6 @@
 import {
   createContext,
+  useCallback,
   useContext,
   useMemo,
   useRef,
@@ -18,6 +19,11 @@ export function EditorProvider({ children }) {
   const canvasRef = useRef(null)
 
   const [
+    canvas,
+    setCanvas
+  ] = useState(null)
+
+  const [
     activeTool,
     setActiveTool
   ] = useState(TOOLS.SELECT)
@@ -30,25 +36,29 @@ export function EditorProvider({ children }) {
     setActiveTool(tool)
   }
 
-  const addText = () => {
-    const canvas = canvasRef.current
-
+  const addText = useCallback(() => {
     if (!canvas) {
       return
     }
 
     return addTextToCanvas(canvas)
-  }
+  }, [
+    canvas
+  ])
 
   const value = useMemo(() => {
     return {
       canvasRef,
+      canvas,
+      setCanvas,
       activeTool,
       setTool,
       addText
     }
   }, [
-    activeTool
+    canvas,
+    activeTool,
+    addText
   ])
 
   return (

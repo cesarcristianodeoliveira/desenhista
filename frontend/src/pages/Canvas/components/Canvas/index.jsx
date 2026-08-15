@@ -15,7 +15,8 @@ function Canvas({ page, zoom }) {
   const canvasElementRef = useRef(null)
 
   const {
-    canvasRef
+    canvasRef,
+    setCanvas
   } = useEditor()
 
   useEffect(() => {
@@ -28,12 +29,17 @@ function Canvas({ page, zoom }) {
     )
 
     canvasRef.current = canvas
+    setCanvas(canvas)
 
     return () => {
       canvas.dispose()
       canvasRef.current = null
+      setCanvas(null)
     }
-  }, [canvasRef])
+  }, [
+    canvasRef,
+    setCanvas
+  ])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -47,17 +53,14 @@ function Canvas({ page, zoom }) {
       height: page.height
     })
 
-    canvas.setDimensions({
-      width: page.width * zoom,
-      height: page.height * zoom
-    }, {
-      cssOnly: true
-    })
-
     canvas.setZoom(zoom)
 
     canvas.requestRenderAll()
-  }, [canvasRef, page, zoom])
+  }, [
+    canvasRef,
+    page,
+    zoom
+  ])
 
   return (
     <canvas ref={canvasElementRef} />

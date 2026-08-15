@@ -5,7 +5,8 @@ import './index.css'
 
 function Sidebar() {
   const {
-    activeTool
+    activeTool,
+    addText
   } = useEditor()
 
   return (
@@ -22,9 +23,18 @@ function Sidebar() {
         )}
 
         {activeTool === TOOLS.TEXT && (
-          <p>
-            Ferramenta de texto.
-          </p>
+          <>
+            <p>
+              Ferramenta de texto.
+            </p>
+
+            <button
+              type="button"
+              onClick={addText}
+            >
+              Adicionar texto
+            </button>
+          </>
         )}
       </div>
     </aside>
