@@ -47,6 +47,13 @@ function Canvas({ page, zoom }) {
       height: page.height
     })
 
+    canvas.setDimensions({
+      width: page.width * zoom,
+      height: page.height * zoom
+    }, {
+      cssOnly: true
+    })
+
     canvas.setZoom(zoom)
 
     canvas.requestRenderAll()
