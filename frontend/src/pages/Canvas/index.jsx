@@ -1,9 +1,13 @@
 import { PAGE_PRESETS } from '../../constants/pages'
+
 import {
   EditorProvider
 } from '../../contexts/EditorContext'
+
+import Sidebar from './components/Sidebar'
 import Toolbar from './components/Toolbar'
 import Workspace from './components/Workspace'
+
 import './index.css'
 
 function Canvas() {
@@ -16,9 +20,13 @@ function Canvas() {
           <h1>{currentPage.name}</h1>
         </header>
 
-        <Toolbar />
+        <div className="canvas-editor">
+          <Toolbar />
 
-        <Workspace page={currentPage} />
+          <Sidebar />
+
+          <Workspace page={currentPage} />
+        </div>
       </main>
     </EditorProvider>
   )

@@ -5,6 +5,13 @@
   overflow: hidden;
 }
 
+.canvas-editor {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  overflow: hidden;
+}
+
 .canvas-header {
   height: 64px;
   padding: 0 24px;
@@ -22,6 +29,7 @@
 
 .workspace {
   flex: 1;
+  min-width: 0;
   min-height: 0;
   display: flex;
   align-items: center;
