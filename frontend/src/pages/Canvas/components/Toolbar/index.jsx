@@ -4,7 +4,8 @@ import { useEditor } from '../../../../contexts/EditorContext'
 function Toolbar() {
   const {
     activeTool,
-    setTool
+    setTool,
+    exportImage
   } = useEditor()
 
   return (
@@ -23,6 +24,13 @@ function Toolbar() {
         aria-pressed={activeTool === TOOLS.TEXT}
       >
         Texto
+      </button>
+
+      <button
+        type="button"
+        onClick={exportImage}
+      >
+        Exportar PNG
       </button>
     </div>
   )

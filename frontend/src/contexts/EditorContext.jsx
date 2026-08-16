@@ -10,7 +10,8 @@ import {
 import { TOOLS } from '../constants/tools'
 
 import {
-  addText as addTextToCanvas
+  addText as addTextToCanvas,
+  exportCanvas as exportCanvasToImage
 } from '../lib/canvas'
 
 const EditorContext = createContext(null)
@@ -58,6 +59,16 @@ export function EditorProvider({ children }) {
     hiddenTextareaContainer
   ])
 
+  const exportImage = useCallback(() => {
+    if (!canvas) {
+      return
+    }
+
+    exportCanvasToImage(canvas)
+  }, [
+    canvas
+  ])
+
   const value = useMemo(() => {
     return {
       canvasRef,
@@ -67,13 +78,15 @@ export function EditorProvider({ children }) {
       setHiddenTextareaContainer,
       activeTool,
       setTool,
-      addText
+      addText,
+      exportImage
     }
   }, [
     canvas,
     hiddenTextareaContainer,
     activeTool,
-    addText
+    addText,
+    exportImage
   ])
 
   return (
