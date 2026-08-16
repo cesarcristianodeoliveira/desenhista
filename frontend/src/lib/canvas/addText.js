@@ -1,6 +1,9 @@
 import { IText } from 'fabric'
 
-export function addText(canvas) {
+export function addText(
+  canvas,
+  hiddenTextareaContainer
+) {
   const text = new IText('Seu texto', {
     left: canvas.getWidth() / 2,
     top: canvas.getHeight() / 2,
@@ -8,7 +11,8 @@ export function addText(canvas) {
     originY: 'center',
     fontSize: 60,
     fill: '#000000',
-    fontFamily: 'Arial'
+    fontFamily: 'Arial',
+    hiddenTextareaContainer
   })
 
   canvas.add(text)

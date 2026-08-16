@@ -11,12 +11,16 @@ import {
   createCanvas
 } from '../../../../lib/canvas'
 
-function Canvas({ page, zoom }) {
+function Canvas({
+  page,
+  hiddenTextareaContainer
+}) {
   const canvasElementRef = useRef(null)
 
   const {
     canvasRef,
-    setCanvas
+    setCanvas,
+    setHiddenTextareaContainer
   } = useEditor()
 
   useEffect(() => {
@@ -28,38 +32,34 @@ function Canvas({ page, zoom }) {
       canvasElementRef.current
     )
 
-    canvasRef.current = canvas
-    setCanvas(canvas)
-
-    return () => {
-      canvas.dispose()
-      canvasRef.current = null
-      setCanvas(null)
-    }
-  }, [
-    canvasRef,
-    setCanvas
-  ])
-
-  useEffect(() => {
-    const canvas = canvasRef.current
-
-    if (!canvas) {
-      return
-    }
-
     canvas.setDimensions({
       width: page.width,
       height: page.height
     })
 
-    canvas.setZoom(zoom)
+    canvasRef.current = canvas
 
-    canvas.requestRenderAll()
+    setCanvas(canvas)
+
+    setHiddenTextareaContainer(
+      hiddenTextareaContainer.current
+    )
+
+    return () => {
+      canvas.dispose()
+
+      canvasRef.current = null
+
+      setCanvas(null)
+
+      setHiddenTextareaContainer(null)
+    }
   }, [
     canvasRef,
+    hiddenTextareaContainer,
     page,
-    zoom
+    setCanvas,
+    setHiddenTextareaContainer
   ])
 
   return (

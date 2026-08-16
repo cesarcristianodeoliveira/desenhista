@@ -24,6 +24,11 @@ export function EditorProvider({ children }) {
   ] = useState(null)
 
   const [
+    hiddenTextareaContainer,
+    setHiddenTextareaContainer
+  ] = useState(null)
+
+  const [
     activeTool,
     setActiveTool
   ] = useState(TOOLS.SELECT)
@@ -37,13 +42,20 @@ export function EditorProvider({ children }) {
   }
 
   const addText = useCallback(() => {
-    if (!canvas) {
+    if (
+      !canvas ||
+      !hiddenTextareaContainer
+    ) {
       return
     }
 
-    return addTextToCanvas(canvas)
+    return addTextToCanvas(
+      canvas,
+      hiddenTextareaContainer
+    )
   }, [
-    canvas
+    canvas,
+    hiddenTextareaContainer
   ])
 
   const value = useMemo(() => {
@@ -51,12 +63,15 @@ export function EditorProvider({ children }) {
       canvasRef,
       canvas,
       setCanvas,
+      hiddenTextareaContainer,
+      setHiddenTextareaContainer,
       activeTool,
       setTool,
       addText
     }
   }, [
     canvas,
+    hiddenTextareaContainer,
     activeTool,
     addText
   ])
