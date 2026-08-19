@@ -4,7 +4,7 @@ export function addText(
   canvas,
   hiddenTextareaContainer
 ) {
-  const text = new IText('Seu texto', {
+  const text = new IText('Texto', {
     left: canvas.getWidth() / 2,
     top: canvas.getHeight() / 2,
     originX: 'center',

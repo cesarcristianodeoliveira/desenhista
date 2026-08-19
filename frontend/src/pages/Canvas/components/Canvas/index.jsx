@@ -11,6 +11,8 @@ import {
   createCanvas
 } from '../../../../lib/canvas'
 
+import normalizeProportionalText from '../../../../lib/canvas/normalizeProportionalText'
+
 function Canvas({
   page,
   hiddenTextareaContainer
@@ -20,7 +22,9 @@ function Canvas({
   const {
     canvasRef,
     setCanvas,
-    setHiddenTextareaContainer
+    setHiddenTextareaContainer,
+    updateSelection,
+    clearSelection
   } = useEditor()
 
   useEffect(() => {
@@ -37,6 +41,61 @@ function Canvas({
       height: page.height
     })
 
+    const handleSelectionChange = () => {
+      updateSelection(
+        canvas.getActiveObjects()
+      )
+    }
+
+    const handleSelectionCleared = () => {
+      clearSelection()
+    }
+
+    const handleObjectModified = (event) => {
+      const object = event.target
+
+      normalizeProportionalText(
+        object
+      )
+
+      canvas.requestRenderAll()
+
+      updateSelection(
+        canvas.getActiveObjects()
+      )
+    }
+
+    const handleTextChanged = () => {
+      updateSelection(
+        canvas.getActiveObjects()
+      )
+    }
+
+    canvas.on(
+      'selection:created',
+      handleSelectionChange
+    )
+
+    canvas.on(
+      'selection:updated',
+      handleSelectionChange
+    )
+
+    canvas.on(
+      'selection:cleared',
+      handleSelectionCleared
+    )
+
+    canvas.on(
+      'object:modified',
+      handleObjectModified
+    )
+
+    canvas.on(
+      'text:changed',
+      handleTextChanged
+    )
+
     canvasRef.current = canvas
 
     setCanvas(canvas)
@@ -46,6 +105,31 @@ function Canvas({
     )
 
     return () => {
+      canvas.off(
+        'selection:created',
+        handleSelectionChange
+      )
+
+      canvas.off(
+        'selection:updated',
+        handleSelectionChange
+      )
+
+      canvas.off(
+        'selection:cleared',
+        handleSelectionCleared
+      )
+
+      canvas.off(
+        'object:modified',
+        handleObjectModified
+      )
+
+      canvas.off(
+        'text:changed',
+        handleTextChanged
+      )
+
       canvas.dispose()
 
       canvasRef.current = null
@@ -53,13 +137,17 @@ function Canvas({
       setCanvas(null)
 
       setHiddenTextareaContainer(null)
+
+      clearSelection()
     }
   }, [
     canvasRef,
     hiddenTextareaContainer,
     page,
     setCanvas,
-    setHiddenTextareaContainer
+    setHiddenTextareaContainer,
+    updateSelection,
+    clearSelection
   ])
 
   return (

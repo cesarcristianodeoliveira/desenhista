@@ -1,33 +1,45 @@
-import { PAGE_PRESETS } from '../../constants/pages'
-
 import {
-  EditorProvider
+  EditorProvider,
+  useEditor
 } from '../../contexts/EditorContext'
 
 import Sidebar from './components/Sidebar'
 import Toolbar from './components/Toolbar'
 import Workspace from './components/Workspace'
+import Properties from './components/Properties'
 
 import './index.css'
 
-function Canvas() {
-  const currentPage = PAGE_PRESETS.INSTAGRAM_POST
+function CanvasEditor() {
+  const {
+    currentPage
+  } = useEditor()
 
   return (
+    <main className="canvas-page">
+      <header className="canvas-header">
+        <h1>{currentPage.name}</h1>
+      </header>
+
+      <Toolbar />
+
+      <div className="canvas-editor">
+        <Sidebar />
+
+        <Workspace
+          page={currentPage}
+        />
+
+        <Properties />
+      </div>
+    </main>
+  )
+}
+
+function Canvas() {
+  return (
     <EditorProvider>
-      <main className="canvas-page">
-        <header className="canvas-header">
-          <h1>{currentPage.name}</h1>
-        </header>
-
-        <div className="canvas-editor">
-          <Toolbar />
-
-          <Sidebar />
-
-          <Workspace page={currentPage} />
-        </div>
-      </main>
+      <CanvasEditor />
     </EditorProvider>
   )
 }

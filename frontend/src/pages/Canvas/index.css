@@ -5,13 +5,6 @@
   overflow: hidden;
 }
 
-.canvas-editor {
-  flex: 1;
-  min-height: 0;
-  display: flex;
-  overflow: hidden;
-}
-
 .canvas-header {
   height: 64px;
   padding: 0 24px;
@@ -19,6 +12,7 @@
   align-items: center;
   border-bottom: 1px solid #d9d9d9;
   background: #ffffff;
+  flex-shrink: 0;
 }
 
 .canvas-header h1 {
@@ -27,8 +21,20 @@
   font-weight: 600;
 }
 
-.workspace {
+.canvas-editor {
   flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr) 280px;
+  overflow: hidden;
+}
+
+.canvas-editor > * {
+  min-width: 0;
+  min-height: 0;
+}
+
+.workspace {
   min-width: 0;
   min-height: 0;
   display: flex;
@@ -36,4 +42,24 @@
   justify-content: center;
   padding: 32px;
   overflow: hidden;
+}
+
+@media (max-width: 1280px) {
+  .canvas-editor {
+    grid-template-columns: 200px minmax(0, 1fr) 240px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .canvas-editor {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .canvas-editor > * {
+    display: none;
+  }
+
+  .canvas-editor > .workspace {
+    display: flex;
+  }
 }

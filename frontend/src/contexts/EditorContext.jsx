@@ -8,6 +8,7 @@ import {
 } from 'react'
 
 import { TOOLS } from '../constants/tools'
+import { PAGE_PRESETS } from '../constants/pages'
 
 import {
   addText as addTextToCanvas,
@@ -25,6 +26,18 @@ export function EditorProvider({ children }) {
   ] = useState(null)
 
   const [
+    currentPage,
+    setCurrentPage
+  ] = useState(
+    PAGE_PRESETS.INSTAGRAM_POST
+  )
+
+  const [
+    backgroundColor,
+    setBackgroundColor
+  ] = useState('#ffffff')
+
+  const [
     hiddenTextareaContainer,
     setHiddenTextareaContainer
   ] = useState(null)
@@ -34,6 +47,11 @@ export function EditorProvider({ children }) {
     setActiveTool
   ] = useState(TOOLS.SELECT)
 
+  const [
+    selection,
+    setSelection
+  ] = useState([])
+
   const setTool = (tool) => {
     if (!Object.values(TOOLS).includes(tool)) {
       return
@@ -41,6 +59,54 @@ export function EditorProvider({ children }) {
 
     setActiveTool(tool)
   }
+
+  const updateSelection = useCallback((objects) => {
+    setSelection([
+      ...objects
+    ])
+  }, [])
+
+  const clearSelection = useCallback(() => {
+    setSelection([])
+  }, [])
+
+  const updateObject = useCallback((properties) => {
+    if (
+      !canvas ||
+      selection.length !== 1
+    ) {
+      return
+    }
+
+    const object = selection[0]
+
+    object.set(properties)
+
+    object.setCoords()
+
+    canvas.requestRenderAll()
+
+    setSelection([
+      object
+    ])
+  }, [
+    canvas,
+    selection
+  ])
+
+  const updateCanvasBackground = useCallback((color) => {
+    if (!canvas) {
+      return
+    }
+
+    canvas.backgroundColor = color
+
+    canvas.requestRenderAll()
+
+    setBackgroundColor(color)
+  }, [
+    canvas
+  ])
 
   const addText = useCallback(() => {
     if (
@@ -74,17 +140,32 @@ export function EditorProvider({ children }) {
       canvasRef,
       canvas,
       setCanvas,
+      currentPage,
+      setCurrentPage,
+      backgroundColor,
+      updateCanvasBackground,
       hiddenTextareaContainer,
       setHiddenTextareaContainer,
       activeTool,
       setTool,
+      selection,
+      updateSelection,
+      clearSelection,
+      updateObject,
       addText,
       exportImage
     }
   }, [
     canvas,
+    currentPage,
+    backgroundColor,
+    updateCanvasBackground,
     hiddenTextareaContainer,
     activeTool,
+    selection,
+    updateSelection,
+    clearSelection,
+    updateObject,
     addText,
     exportImage
   ])

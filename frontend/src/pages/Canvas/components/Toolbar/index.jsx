@@ -1,5 +1,8 @@
 import { TOOLS } from '../../../../constants/tools'
-import { useEditor } from '../../../../contexts/EditorContext'
+
+import {
+  useEditor
+} from '../../../../contexts/EditorContext'
 
 function Toolbar() {
   const {
