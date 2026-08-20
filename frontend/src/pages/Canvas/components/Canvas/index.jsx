@@ -15,7 +15,8 @@ import normalizeProportionalText from '../../../../lib/canvas/normalizeProportio
 
 function Canvas({
   page,
-  hiddenTextareaContainer
+  hiddenTextareaContainer,
+  onReady
 }) {
   const canvasElementRef = useRef(null)
 
@@ -104,6 +105,8 @@ function Canvas({
       hiddenTextareaContainer.current
     )
 
+    onReady()
+
     return () => {
       canvas.off(
         'selection:created',
@@ -147,7 +150,8 @@ function Canvas({
     setCanvas,
     setHiddenTextareaContainer,
     updateSelection,
-    clearSelection
+    clearSelection,
+    onReady
   ])
 
   return (

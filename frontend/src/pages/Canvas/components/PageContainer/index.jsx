@@ -6,7 +6,11 @@ import './index.css'
 
 import Canvas from '../Canvas'
 
-function PageContainer({ page, zoom }) {
+function PageContainer({
+  page,
+  zoom,
+  onReady
+}) {
   const hiddenTextareaContainerRef = useRef(null)
 
   const width = page.width * zoom
@@ -33,6 +37,7 @@ function PageContainer({ page, zoom }) {
           hiddenTextareaContainer={
             hiddenTextareaContainerRef
           }
+          onReady={onReady}
         />
       </div>
 

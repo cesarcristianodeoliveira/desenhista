@@ -8,7 +8,10 @@ import PageContainer from '../PageContainer'
 
 const WORKSPACE_PADDING = 64
 
-function Workspace({ page }) {
+function Workspace({
+  page,
+  onReady
+}) {
   const workspaceRef = useRef(null)
 
   const [zoom, setZoom] = useState(1)
@@ -67,6 +70,7 @@ function Workspace({ page }) {
       <PageContainer
         page={page}
         zoom={zoom}
+        onReady={onReady}
       />
     </section>
   )
