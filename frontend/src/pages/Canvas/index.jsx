@@ -9,6 +9,7 @@ import {
 } from '../../contexts/EditorContext'
 
 import CanvasStart from './components/CanvasStart'
+import Header from './components/Header'
 import Sidebar from './components/Sidebar'
 import Toolbar from './components/Toolbar'
 import Workspace from './components/Workspace'
@@ -25,10 +26,8 @@ function CanvasEditor({
 
   return (
     <main className="canvas-page">
-      <header className="canvas-header">
-        <h1>{currentPage.name}</h1>
-      </header>
-
+      <Header />
+      
       <Toolbar />
 
       <div className="canvas-editor">

@@ -8,8 +8,9 @@ function BottomNav() {
     <Box
       component="nav"
       sx={{
-        height: 48,
-        px: 3,
+        minHeight: 56,
+        px: 2,
+        py: 1,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -18,7 +19,7 @@ function BottomNav() {
       }}
     >
       <Typography
-        variant="body2"
+        variant="body1"
         sx={{
           fontWeight: 600,
           lineHeight: 1

@@ -1,43 +1,78 @@
-import { TOOLS } from '../../../../constants/tools'
-import { useEditor } from '../../../../contexts/EditorContext'
+import {
+  TextFields,
+  NearMe
+} from '@mui/icons-material'
 
-import './index.css'
+import {
+  Box,
+  IconButton,
+  Tooltip
+} from '@mui/material'
+
+import {
+  TOOLS
+} from '../../../../constants/tools'
+
+import {
+  useEditor
+} from '../../../../contexts/EditorContext'
 
 function Sidebar() {
   const {
     activeTool,
-    addText
+    setTool
   } = useEditor()
 
   return (
-    <aside className="canvas-sidebar">
-      <div className="canvas-sidebar-header">
-        <span>Ferramentas</span>
-      </div>
+    <Box
+      component="aside"
+      sx={{
+        width: 56,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        py: 1,
+        gap: 1,
+        borderRight: 1,
+        borderColor: 'divider'
+      }}
+    >
+      <Tooltip title="Selecionar" placement="right">
+        <IconButton
+          onClick={() => {
+            setTool(TOOLS.SELECT)
+          }}
+          color={
+            activeTool === TOOLS.SELECT
+              ? 'primary'
+              : 'default'
+          }
+          aria-label="Selecionar"
+        >
+          <NearMe
+            sx={{
+              transform: 'scaleX(-1)'
+            }}
+          />
+        </IconButton>
+      </Tooltip>
 
-      <div className="canvas-sidebar-content">
-        {activeTool === TOOLS.SELECT && (
-          <p>
-            Selecione um elemento no Canvas.
-          </p>
-        )}
-
-        {activeTool === TOOLS.TEXT && (
-          <>
-            <p>
-              Ferramenta de texto.
-            </p>
-
-            <button
-              type="button"
-              onClick={addText}
-            >
-              Adicionar texto
-            </button>
-          </>
-        )}
-      </div>
-    </aside>
+      <Tooltip title="Texto" placement="right">
+        <IconButton
+          onClick={() => {
+            setTool(TOOLS.TEXT)
+          }}
+          color={
+            activeTool === TOOLS.TEXT
+              ? 'primary'
+              : 'default'
+          }
+          aria-label="Texto"
+        >
+          <TextFields />
+        </IconButton>
+      </Tooltip>
+    </Box>
   )
 }
 

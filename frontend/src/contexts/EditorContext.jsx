@@ -7,8 +7,13 @@ import {
   useState
 } from 'react'
 
-import { TOOLS } from '../constants/tools'
-import { PAGE_PRESETS } from '../constants/pages'
+import {
+  TOOLS
+} from '../constants/tools'
+
+import {
+  PAGE_PRESETS
+} from '../constants/pages'
 
 import {
   addText as addTextToCanvas,

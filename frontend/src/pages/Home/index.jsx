@@ -4,6 +4,8 @@ import {
 
 import {
   Box,
+  CardActionArea,
+  Grid,
   Typography
 } from '@mui/material'
 
@@ -23,43 +25,53 @@ function Home() {
         flexDirection: 'column'
       }}
     >
-      <Box
+      <Grid
+        container
         sx={{
           flex: 1,
-          display: 'grid',
-          gridTemplateColumns:
-            'repeat(auto-fill, minmax(120px, 120px))',
-          alignContent: 'start',
-          gap: 3,
-          p: 3
+          alignContent: 'flex-start',
+          gap: 1,
+          p: 2
         }}
       >
-        <Box
-          component={Link}
-          to="/canvas"
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: 1,
-            color: 'text.primary',
-            textDecoration: 'none'
+        <Grid
+          size={{
+            xs: 3,
+            sm: 3,
+            md: 2,
+            lg: 1
           }}
         >
-          <Palette
+          <CardActionArea
+            component={Link}
+            to="/canvas"
             sx={{
-              fontSize: 32
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 1,
+              p: 2,
+              textDecoration: 'none'
             }}
-          />
-
-          <Typography
-            variant="body2"
-            align="center"
           >
-            Canvas
-          </Typography>
-        </Box>
-      </Box>
+            <Palette
+              sx={{
+                fontSize: 32
+              }}
+            />
+
+            <Typography
+              variant="body2"
+              align="center"
+              sx={{
+                lineHeight: 1
+              }}
+            >
+              Canvas
+            </Typography>
+          </CardActionArea>
+        </Grid>
+      </Grid>
 
       <BottomNav />
     </Box>

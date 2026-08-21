@@ -1,4 +1,11 @@
-import { TOOLS } from '../../../../constants/tools'
+import {
+  Box,
+  Button
+} from '@mui/material'
+
+import {
+  TOOLS
+} from '../../../../constants/tools'
 
 import {
   useEditor
@@ -7,35 +14,33 @@ import {
 function Toolbar() {
   const {
     activeTool,
-    setTool,
-    exportImage
+    addText
   } = useEditor()
 
   return (
-    <div>
-      <button
-        type="button"
-        onClick={() => setTool(TOOLS.SELECT)}
-        aria-pressed={activeTool === TOOLS.SELECT}
-      >
-        Selecionar
-      </button>
-
-      <button
-        type="button"
-        onClick={() => setTool(TOOLS.TEXT)}
-        aria-pressed={activeTool === TOOLS.TEXT}
-      >
-        Texto
-      </button>
-
-      <button
-        type="button"
-        onClick={exportImage}
-      >
-        Exportar PNG
-      </button>
-    </div>
+    <Box
+      component="section"
+      sx={{
+        minHeight: 48,
+        px: 2,
+        display: 'flex',
+        alignItems: 'center',
+        borderBottom: 1,
+        borderColor: 'divider'
+      }}
+    >
+      {activeTool === TOOLS.TEXT && (
+        <Button
+          variant="outlined"
+          onClick={addText}
+          sx={{
+            textTransform: 'none'
+          }}
+        >
+          Adicionar texto
+        </Button>
+      )}
+    </Box>
   )
 }
 
