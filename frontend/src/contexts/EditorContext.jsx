@@ -62,6 +62,11 @@ export function EditorProvider({ children }) {
   ] = useState(1)
 
   const [
+    isFitZoom,
+    setIsFitZoom
+  ] = useState(true)
+
+  const [
     selection,
     setSelection
   ] = useState([])
@@ -81,13 +86,18 @@ export function EditorProvider({ children }) {
     )
 
     setZoom(nextZoom)
+    setIsFitZoom(false)
   }, [])
 
   const setFitZoom = useCallback((value) => {
-    setZoomLevel(value)
-  }, [
-    setZoomLevel
-  ])
+    const nextZoom = Math.min(
+      Math.max(value, MIN_ZOOM),
+      MAX_ZOOM
+    )
+
+    setZoom(nextZoom)
+    setIsFitZoom(true)
+  }, [])
 
   const zoomIn = useCallback(() => {
     setZoom((currentZoom) => {
@@ -96,6 +106,8 @@ export function EditorProvider({ children }) {
         MAX_ZOOM
       )
     })
+
+    setIsFitZoom(false)
   }, [])
 
   const zoomOut = useCallback(() => {
@@ -105,6 +117,8 @@ export function EditorProvider({ children }) {
         MIN_ZOOM
       )
     })
+
+    setIsFitZoom(false)
   }, [])
 
   const updateSelection = useCallback((objects) => {
@@ -196,6 +210,7 @@ export function EditorProvider({ children }) {
       activeTool,
       setTool,
       zoom,
+      isFitZoom,
       setZoomLevel,
       setFitZoom,
       zoomIn,
@@ -215,6 +230,7 @@ export function EditorProvider({ children }) {
     hiddenTextareaContainer,
     activeTool,
     zoom,
+    isFitZoom,
     setZoomLevel,
     setFitZoom,
     zoomIn,

@@ -1,4 +1,5 @@
 import {
+  useCallback,
   useEffect,
   useRef
 } from 'react'
@@ -23,10 +24,11 @@ function Workspace({
     zoom,
     setFitZoom,
     zoomIn,
-    zoomOut
+    zoomOut,
+    setZoomLevel
   } = useEditor()
 
-  const centerWorkspace = () => {
+  const centerWorkspace = useCallback(() => {
     const scroll = scrollRef.current
 
     if (!scroll) {
@@ -44,23 +46,88 @@ function Workspace({
         0,
         (scroll.scrollHeight - scroll.clientHeight) / 2
       )
-  }
+  }, [])
 
-  const handleZoomIn = () => {
+  const calculateFitZoom = useCallback(() => {
+    const workspace = workspaceRef.current
+
+    if (!workspace) {
+      return 1
+    }
+
+    const {
+      width,
+      height
+    } = workspace.getBoundingClientRect()
+
+    const availableWidth =
+      width - WORKSPACE_PADDING
+
+    const availableHeight =
+      height - WORKSPACE_PADDING
+
+    const scaleX =
+      availableWidth / page.width
+
+    const scaleY =
+      availableHeight / page.height
+
+    return Math.min(
+      scaleX,
+      scaleY,
+      1
+    )
+  }, [
+    page
+  ])
+
+  const fitToScreen = useCallback(() => {
+    const nextZoom =
+      calculateFitZoom()
+
+    setFitZoom(nextZoom)
+
+    requestAnimationFrame(() => {
+      centerWorkspace()
+    })
+  }, [
+    calculateFitZoom,
+    setFitZoom,
+    centerWorkspace
+  ])
+
+  const handleZoomIn = useCallback(() => {
     zoomIn()
 
     requestAnimationFrame(() => {
       centerWorkspace()
     })
-  }
+  }, [
+    zoomIn,
+    centerWorkspace
+  ])
 
-  const handleZoomOut = () => {
+  const handleZoomOut = useCallback(() => {
     zoomOut()
 
     requestAnimationFrame(() => {
       centerWorkspace()
     })
-  }
+  }, [
+    zoomOut,
+    centerWorkspace
+  ])
+
+  const handleZoomSelect = useCallback((value) => {
+    setZoomLevel(value)
+
+    requestAnimationFrame(() => {
+      centerWorkspace()
+    })
+  }, [
+    setZoomLevel,
+    centerWorkspace
+  ])
 
   useEffect(() => {
     const workspace = workspaceRef.current
@@ -69,50 +136,20 @@ function Workspace({
       return undefined
     }
 
-    const updateZoom = () => {
-      const {
-        width,
-        height
-      } = workspace.getBoundingClientRect()
-
-      const availableWidth =
-        width - WORKSPACE_PADDING
-
-      const availableHeight =
-        height - WORKSPACE_PADDING
-
-      const scaleX =
-        availableWidth / page.width
-
-      const scaleY =
-        availableHeight / page.height
-
-      const nextZoom = Math.min(
-        scaleX,
-        scaleY,
-        1
-      )
-
-      setFitZoom(nextZoom)
-
-      requestAnimationFrame(() => {
-        centerWorkspace()
-      })
-    }
-
     const resizeObserver =
-      new ResizeObserver(updateZoom)
+      new ResizeObserver(() => {
+        fitToScreen()
+      })
 
     resizeObserver.observe(workspace)
 
-    updateZoom()
+    fitToScreen()
 
     return () => {
       resizeObserver.disconnect()
     }
   }, [
-    page,
-    setFitZoom
+    fitToScreen
   ])
 
   return (
@@ -138,6 +175,8 @@ function Workspace({
       <BottomBar
         onZoomIn={handleZoomIn}
         onZoomOut={handleZoomOut}
+        onZoomSelect={handleZoomSelect}
+        onFitZoom={fitToScreen}
       />
     </section>
   )
