@@ -31,6 +31,7 @@ function Sidebar() {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        px: 2,
         py: 1,
         gap: 1,
         borderRight: 1,

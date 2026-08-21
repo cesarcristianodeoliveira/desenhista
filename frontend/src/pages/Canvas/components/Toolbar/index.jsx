@@ -22,7 +22,7 @@ function Toolbar() {
       component="section"
       sx={{
         minHeight: 48,
-        px: 2,
+        px: 1,
         display: 'flex',
         alignItems: 'center',
         borderBottom: 1,

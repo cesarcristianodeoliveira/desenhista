@@ -27,7 +27,7 @@ function CanvasEditor({
   return (
     <main className="canvas-page">
       <Header />
-      
+
       <Toolbar />
 
       <div className="canvas-editor">

@@ -9,8 +9,7 @@ function BottomNav() {
       component="nav"
       sx={{
         minHeight: 56,
-        px: 2,
-        py: 1,
+        p: 1,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',

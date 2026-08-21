@@ -22,6 +22,10 @@ import {
 
 const EditorContext = createContext(null)
 
+const MIN_ZOOM = 0.1
+const MAX_ZOOM = 5
+const ZOOM_STEP = 0.1
+
 export function EditorProvider({ children }) {
   const canvasRef = useRef(null)
 
@@ -53,6 +57,11 @@ export function EditorProvider({ children }) {
   ] = useState(TOOLS.SELECT)
 
   const [
+    zoom,
+    setZoom
+  ] = useState(1)
+
+  const [
     selection,
     setSelection
   ] = useState([])
@@ -64,6 +73,39 @@ export function EditorProvider({ children }) {
 
     setActiveTool(tool)
   }
+
+  const setZoomLevel = useCallback((value) => {
+    const nextZoom = Math.min(
+      Math.max(value, MIN_ZOOM),
+      MAX_ZOOM
+    )
+
+    setZoom(nextZoom)
+  }, [])
+
+  const setFitZoom = useCallback((value) => {
+    setZoomLevel(value)
+  }, [
+    setZoomLevel
+  ])
+
+  const zoomIn = useCallback(() => {
+    setZoom((currentZoom) => {
+      return Math.min(
+        currentZoom + ZOOM_STEP,
+        MAX_ZOOM
+      )
+    })
+  }, [])
+
+  const zoomOut = useCallback(() => {
+    setZoom((currentZoom) => {
+      return Math.max(
+        currentZoom - ZOOM_STEP,
+        MIN_ZOOM
+      )
+    })
+  }, [])
 
   const updateSelection = useCallback((objects) => {
     setSelection([
@@ -153,6 +195,11 @@ export function EditorProvider({ children }) {
       setHiddenTextareaContainer,
       activeTool,
       setTool,
+      zoom,
+      setZoomLevel,
+      setFitZoom,
+      zoomIn,
+      zoomOut,
       selection,
       updateSelection,
       clearSelection,
@@ -167,6 +214,11 @@ export function EditorProvider({ children }) {
     updateCanvasBackground,
     hiddenTextareaContainer,
     activeTool,
+    zoom,
+    setZoomLevel,
+    setFitZoom,
+    zoomIn,
+    zoomOut,
     selection,
     updateSelection,
     clearSelection,

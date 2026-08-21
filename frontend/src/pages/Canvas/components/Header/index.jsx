@@ -30,7 +30,7 @@ function Header() {
       component="header"
       sx={{
         minHeight: 56,
-        px: 2,
+        px: 1,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',

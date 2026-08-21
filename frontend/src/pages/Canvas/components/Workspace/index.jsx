@@ -1,10 +1,14 @@
 import {
   useEffect,
-  useRef,
-  useState
+  useRef
 } from 'react'
 
+import {
+  useEditor
+} from '../../../../contexts/EditorContext'
+
 import PageContainer from '../PageContainer'
+import BottomBar from './components/BottomBar'
 
 const WORKSPACE_PADDING = 64
 
@@ -13,8 +17,50 @@ function Workspace({
   onReady
 }) {
   const workspaceRef = useRef(null)
+  const scrollRef = useRef(null)
 
-  const [zoom, setZoom] = useState(1)
+  const {
+    zoom,
+    setFitZoom,
+    zoomIn,
+    zoomOut
+  } = useEditor()
+
+  const centerWorkspace = () => {
+    const scroll = scrollRef.current
+
+    if (!scroll) {
+      return
+    }
+
+    scroll.scrollLeft =
+      Math.max(
+        0,
+        (scroll.scrollWidth - scroll.clientWidth) / 2
+      )
+
+    scroll.scrollTop =
+      Math.max(
+        0,
+        (scroll.scrollHeight - scroll.clientHeight) / 2
+      )
+  }
+
+  const handleZoomIn = () => {
+    zoomIn()
+
+    requestAnimationFrame(() => {
+      centerWorkspace()
+    })
+  }
+
+  const handleZoomOut = () => {
+    zoomOut()
+
+    requestAnimationFrame(() => {
+      centerWorkspace()
+    })
+  }
 
   useEffect(() => {
     const workspace = workspaceRef.current
@@ -47,7 +93,11 @@ function Workspace({
         1
       )
 
-      setZoom(nextZoom)
+      setFitZoom(nextZoom)
+
+      requestAnimationFrame(() => {
+        centerWorkspace()
+      })
     }
 
     const resizeObserver =
@@ -60,17 +110,34 @@ function Workspace({
     return () => {
       resizeObserver.disconnect()
     }
-  }, [page])
+  }, [
+    page,
+    setFitZoom
+  ])
 
   return (
-    <section
-      ref={workspaceRef}
-      className="workspace"
-    >
-      <PageContainer
-        page={page}
-        zoom={zoom}
-        onReady={onReady}
+    <section className="workspace">
+      <div
+        ref={workspaceRef}
+        className="workspace-area"
+      >
+        <div
+          ref={scrollRef}
+          className="workspace-scroll"
+        >
+          <div className="workspace-content">
+            <PageContainer
+              page={page}
+              zoom={zoom}
+              onReady={onReady}
+            />
+          </div>
+        </div>
+      </div>
+
+      <BottomBar
+        onZoomIn={handleZoomIn}
+        onZoomOut={handleZoomOut}
       />
     </section>
   )

@@ -31,7 +31,7 @@ function Home() {
           flex: 1,
           alignContent: 'flex-start',
           gap: 1,
-          p: 2
+          p: 1
         }}
       >
         <Grid
@@ -50,7 +50,7 @@ function Home() {
               flexDirection: 'column',
               alignItems: 'center',
               gap: 1,
-              p: 2,
+              p: 1,
               textDecoration: 'none'
             }}
           >
