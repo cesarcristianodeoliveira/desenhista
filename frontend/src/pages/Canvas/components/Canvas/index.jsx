@@ -30,7 +30,8 @@ function Canvas({
     setHiddenTextareaContainer,
     updateSelection,
     clearSelection,
-    setTool
+    setTool,
+    markAsChanged
   } = useEditor()
 
   useEffect(() => {
@@ -57,6 +58,7 @@ function Canvas({
 
     const handleSelectionCleared = () => {
       clearSelection()
+
       setTool(TOOLS.SELECT)
     }
 
@@ -72,6 +74,8 @@ function Canvas({
       updateSelection(
         canvas.getActiveObjects()
       )
+
+      markAsChanged()
     }
 
     const handleTextChanged = () => {
@@ -160,6 +164,7 @@ function Canvas({
     updateSelection,
     clearSelection,
     setTool,
+    markAsChanged,
     onReady
   ])
 

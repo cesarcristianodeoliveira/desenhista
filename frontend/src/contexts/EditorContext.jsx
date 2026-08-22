@@ -45,6 +45,16 @@ export function EditorProvider({ children }) {
   )
 
   const [
+    documentName,
+    setDocumentName
+  ] = useState('Sem título')
+
+  const [
+    hasChanges,
+    setHasChanges
+  ] = useState(false)
+
+  const [
     backgroundColor,
     setBackgroundColor
   ] = useState('#ffffff')
@@ -90,6 +100,10 @@ export function EditorProvider({ children }) {
     }
 
     setActiveTool(tool)
+  }, [])
+
+  const markAsChanged = useCallback(() => {
+    setHasChanges(true)
   }, [])
 
   const setZoomLevel = useCallback((value) => {
@@ -207,9 +221,256 @@ export function EditorProvider({ children }) {
     setSelection([
       object
     ])
+
+    markAsChanged()
   }, [
     canvas,
-    selection
+    selection,
+    markAsChanged
+  ])
+
+  const alignObjectLeft = useCallback(() => {
+    if (
+      !canvas ||
+      selection.length !== 1
+    ) {
+      return
+    }
+
+    const object = selection[0]
+
+    const bounds =
+      object.getBoundingRect()
+
+    object.set({
+      left:
+        object.left -
+        bounds.left
+    })
+
+    object.setCoords()
+
+    canvas.requestRenderAll()
+
+    setSelection([
+      object
+    ])
+
+    markAsChanged()
+  }, [
+    canvas,
+    selection,
+    markAsChanged
+  ])
+
+  const alignObjectCenterHorizontal = useCallback(() => {
+    if (
+      !canvas ||
+      selection.length !== 1
+    ) {
+      return
+    }
+
+    const object = selection[0]
+
+    const bounds =
+      object.getBoundingRect()
+
+    const canvasCenter =
+      canvas.getWidth() / 2
+
+    const objectCenter =
+      bounds.left +
+      bounds.width / 2
+
+    object.set({
+      left:
+        object.left +
+        (
+          canvasCenter -
+          objectCenter
+        )
+    })
+
+    object.setCoords()
+
+    canvas.requestRenderAll()
+
+    setSelection([
+      object
+    ])
+
+    markAsChanged()
+  }, [
+    canvas,
+    selection,
+    markAsChanged
+  ])
+
+  const alignObjectRight = useCallback(() => {
+    if (
+      !canvas ||
+      selection.length !== 1
+    ) {
+      return
+    }
+
+    const object = selection[0]
+
+    const bounds =
+      object.getBoundingRect()
+
+    const canvasRight =
+      canvas.getWidth()
+
+    const objectRight =
+      bounds.left +
+      bounds.width
+
+    object.set({
+      left:
+        object.left +
+        (
+          canvasRight -
+          objectRight
+        )
+    })
+
+    object.setCoords()
+
+    canvas.requestRenderAll()
+
+    setSelection([
+      object
+    ])
+
+    markAsChanged()
+  }, [
+    canvas,
+    selection,
+    markAsChanged
+  ])
+
+  const alignObjectTop = useCallback(() => {
+    if (
+      !canvas ||
+      selection.length !== 1
+    ) {
+      return
+    }
+
+    const object = selection[0]
+
+    const bounds =
+      object.getBoundingRect()
+
+    object.set({
+      top:
+        object.top -
+        bounds.top
+    })
+
+    object.setCoords()
+
+    canvas.requestRenderAll()
+
+    setSelection([
+      object
+    ])
+
+    markAsChanged()
+  }, [
+    canvas,
+    selection,
+    markAsChanged
+  ])
+
+  const alignObjectCenterVertical = useCallback(() => {
+    if (
+      !canvas ||
+      selection.length !== 1
+    ) {
+      return
+    }
+
+    const object = selection[0]
+
+    const bounds =
+      object.getBoundingRect()
+
+    const canvasCenter =
+      canvas.getHeight() / 2
+
+    const objectCenter =
+      bounds.top +
+      bounds.height / 2
+
+    object.set({
+      top:
+        object.top +
+        (
+          canvasCenter -
+          objectCenter
+        )
+    })
+
+    object.setCoords()
+
+    canvas.requestRenderAll()
+
+    setSelection([
+      object
+    ])
+
+    markAsChanged()
+  }, [
+    canvas,
+    selection,
+    markAsChanged
+  ])
+
+  const alignObjectBottom = useCallback(() => {
+    if (
+      !canvas ||
+      selection.length !== 1
+    ) {
+      return
+    }
+
+    const object = selection[0]
+
+    const bounds =
+      object.getBoundingRect()
+
+    const canvasBottom =
+      canvas.getHeight()
+
+    const objectBottom =
+      bounds.top +
+      bounds.height
+
+    object.set({
+      top:
+        object.top +
+        (
+          canvasBottom -
+          objectBottom
+        )
+    })
+
+    object.setCoords()
+
+    canvas.requestRenderAll()
+
+    setSelection([
+      object
+    ])
+
+    markAsChanged()
+  }, [
+    canvas,
+    selection,
+    markAsChanged
   ])
 
   const updateCanvasBackground = useCallback((color) => {
@@ -222,8 +483,11 @@ export function EditorProvider({ children }) {
     canvas.requestRenderAll()
 
     setBackgroundColor(color)
+
+    markAsChanged()
   }, [
-    canvas
+    canvas,
+    markAsChanged
   ])
 
   const addText = useCallback(() => {
@@ -234,23 +498,42 @@ export function EditorProvider({ children }) {
       return
     }
 
-    return addTextToCanvas(
+    const text = addTextToCanvas(
       canvas,
       hiddenTextareaContainer
     )
+
+    markAsChanged()
+
+    setActiveTool(TOOLS.SELECT)
+
+    return text
   }, [
     canvas,
-    hiddenTextareaContainer
+    hiddenTextareaContainer,
+    markAsChanged
   ])
 
   const exportImage = useCallback(() => {
-    if (!canvas) {
+    if (
+      !canvas ||
+      !hasChanges
+    ) {
       return
     }
 
-    exportCanvasToImage(canvas)
+    exportCanvasToImage(
+      canvas,
+      {
+        documentName,
+        pageName: currentPage.name
+      }
+    )
   }, [
-    canvas
+    canvas,
+    hasChanges,
+    documentName,
+    currentPage
   ])
 
   const value = useMemo(() => {
@@ -258,26 +541,47 @@ export function EditorProvider({ children }) {
       canvasRef,
       canvas,
       setCanvas,
+
       currentPage,
       setCurrentPage,
+
+      documentName,
+      setDocumentName,
+
+      hasChanges,
+      markAsChanged,
+
       backgroundColor,
       updateCanvasBackground,
+
       hiddenTextareaContainer,
       setHiddenTextareaContainer,
+
       activeTool,
       setTool,
+
       zoom,
       isFitZoom,
       setZoomLevel,
       setFitZoom,
       zoomIn,
       zoomOut,
+
       selection,
       updateSelection,
       clearSelection,
       updateObject,
+
+      alignObjectLeft,
+      alignObjectCenterHorizontal,
+      alignObjectRight,
+      alignObjectTop,
+      alignObjectCenterVertical,
+      alignObjectBottom,
+
       addText,
       exportImage,
+
       canUndo,
       canRedo,
       undo,
@@ -286,6 +590,9 @@ export function EditorProvider({ children }) {
   }, [
     canvas,
     currentPage,
+    documentName,
+    hasChanges,
+    markAsChanged,
     backgroundColor,
     updateCanvasBackground,
     hiddenTextareaContainer,
@@ -301,6 +608,12 @@ export function EditorProvider({ children }) {
     updateSelection,
     clearSelection,
     updateObject,
+    alignObjectLeft,
+    alignObjectCenterHorizontal,
+    alignObjectRight,
+    alignObjectTop,
+    alignObjectCenterVertical,
+    alignObjectBottom,
     addText,
     exportImage,
     canUndo,
