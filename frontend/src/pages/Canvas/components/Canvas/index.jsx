@@ -4,6 +4,10 @@ import {
 } from 'react'
 
 import {
+  TOOLS
+} from '../../../../constants/tools'
+
+import {
   useEditor
 } from '../../../../contexts/EditorContext'
 
@@ -25,7 +29,8 @@ function Canvas({
     setCanvas,
     setHiddenTextareaContainer,
     updateSelection,
-    clearSelection
+    clearSelection,
+    setTool
   } = useEditor()
 
   useEffect(() => {
@@ -46,10 +51,13 @@ function Canvas({
       updateSelection(
         canvas.getActiveObjects()
       )
+
+      setTool(TOOLS.SELECT)
     }
 
     const handleSelectionCleared = () => {
       clearSelection()
+      setTool(TOOLS.SELECT)
     }
 
     const handleObjectModified = (event) => {
@@ -151,6 +159,7 @@ function Canvas({
     setHiddenTextareaContainer,
     updateSelection,
     clearSelection,
+    setTool,
     onReady
   ])
 

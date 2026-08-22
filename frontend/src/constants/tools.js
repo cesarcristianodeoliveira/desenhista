@@ -1,4 +1,5 @@
 export const TOOLS = {
   SELECT: 'select',
-  TEXT: 'text'
+  TEXT: 'text',
+  IMAGE: 'image'
 }

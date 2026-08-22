@@ -29,6 +29,9 @@ const ZOOM_STEP = 0.1
 export function EditorProvider({ children }) {
   const canvasRef = useRef(null)
 
+  const historyRef = useRef([])
+  const futureRef = useRef([])
+
   const [
     canvas,
     setCanvas
@@ -71,13 +74,23 @@ export function EditorProvider({ children }) {
     setSelection
   ] = useState([])
 
-  const setTool = (tool) => {
+  const [
+    canUndo,
+    setCanUndo
+  ] = useState(false)
+
+  const [
+    canRedo,
+    setCanRedo
+  ] = useState(false)
+
+  const setTool = useCallback((tool) => {
     if (!Object.values(TOOLS).includes(tool)) {
       return
     }
 
     setActiveTool(tool)
-  }
+  }, [])
 
   const setZoomLevel = useCallback((value) => {
     const nextZoom = Math.min(
@@ -120,6 +133,50 @@ export function EditorProvider({ children }) {
 
     setIsFitZoom(false)
   }, [])
+
+  const updateHistoryState = useCallback(() => {
+    setCanUndo(
+      historyRef.current.length > 0
+    )
+
+    setCanRedo(
+      futureRef.current.length > 0
+    )
+  }, [])
+
+  const undo = useCallback(() => {
+    const operation =
+      historyRef.current.pop()
+
+    if (!operation) {
+      return
+    }
+
+    futureRef.current.push(
+      operation
+    )
+
+    updateHistoryState()
+  }, [
+    updateHistoryState
+  ])
+
+  const redo = useCallback(() => {
+    const operation =
+      futureRef.current.pop()
+
+    if (!operation) {
+      return
+    }
+
+    historyRef.current.push(
+      operation
+    )
+
+    updateHistoryState()
+  }, [
+    updateHistoryState
+  ])
 
   const updateSelection = useCallback((objects) => {
     setSelection([
@@ -220,7 +277,11 @@ export function EditorProvider({ children }) {
       clearSelection,
       updateObject,
       addText,
-      exportImage
+      exportImage,
+      canUndo,
+      canRedo,
+      undo,
+      redo
     }
   }, [
     canvas,
@@ -229,6 +290,7 @@ export function EditorProvider({ children }) {
     updateCanvasBackground,
     hiddenTextareaContainer,
     activeTool,
+    setTool,
     zoom,
     isFitZoom,
     setZoomLevel,
@@ -240,7 +302,11 @@ export function EditorProvider({ children }) {
     clearSelection,
     updateObject,
     addText,
-    exportImage
+    exportImage,
+    canUndo,
+    canRedo,
+    undo,
+    redo
   ])
 
   return (

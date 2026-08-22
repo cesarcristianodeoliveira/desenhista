@@ -1,12 +1,5 @@
 import {
-  TextFields,
-  NearMe
-} from '@mui/icons-material'
-
-import {
-  Box,
-  IconButton,
-  Tooltip
+  Box
 } from '@mui/material'
 
 import {
@@ -17,62 +10,46 @@ import {
   useEditor
 } from '../../../../contexts/EditorContext'
 
+import SelectPanel from './components/SelectPanel'
+import TextPanel from './components/TextPanel'
+
 function Sidebar() {
   const {
-    activeTool,
-    setTool
+    activeTool
   } = useEditor()
+
+  const renderContent = () => {
+    switch (activeTool) {
+      case TOOLS.TEXT:
+        return <TextPanel />
+
+      case TOOLS.IMAGE:
+        return (
+          <Box>
+            Imagem
+          </Box>
+        )
+
+      case TOOLS.SELECT:
+      default:
+        return <SelectPanel />
+    }
+  }
 
   return (
     <Box
       component="aside"
       sx={{
-        width: 56,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        px: 2,
-        py: 1,
-        gap: 1,
+        width: '100%',
+        height: '100%',
+        minWidth: 0,
+        minHeight: 0,
+        overflow: 'auto',
         borderRight: 1,
         borderColor: 'divider'
       }}
     >
-      <Tooltip title="Selecionar" placement="right">
-        <IconButton
-          onClick={() => {
-            setTool(TOOLS.SELECT)
-          }}
-          color={
-            activeTool === TOOLS.SELECT
-              ? 'primary'
-              : 'default'
-          }
-          aria-label="Selecionar"
-        >
-          <NearMe
-            sx={{
-              transform: 'scaleX(-1)'
-            }}
-          />
-        </IconButton>
-      </Tooltip>
-
-      <Tooltip title="Texto" placement="right">
-        <IconButton
-          onClick={() => {
-            setTool(TOOLS.TEXT)
-          }}
-          color={
-            activeTool === TOOLS.TEXT
-              ? 'primary'
-              : 'default'
-          }
-          aria-label="Texto"
-        >
-          <TextFields />
-        </IconButton>
-      </Tooltip>
+      {renderContent()}
     </Box>
   )
 }
